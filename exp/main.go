@@ -3,6 +3,8 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"galleria.com/hash"
+	"galleria.com/rand"
 	"os"
 	"strings"
 
@@ -36,6 +38,10 @@ type Order struct {
 }
 
 func main() {
+	fmt.Println(rand.String(10))
+	fmt.Println(rand.RememberToken())
+	hmac := hash.NewHMAC("my-secret-key")
+	fmt.Println(hmac.Hash("this is my string to hash"))
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"dbname=%s sslmode=disable", host, port, user, dbname)
 
@@ -48,33 +54,47 @@ func main() {
 	user := models.User{
 		Name:  "Kimi Ri",
 		Email: "kimi@ri.com",
+		Password: "password",
 	}
 
-	// if err := us.Create(&user); err != nil {
-	// 	panic(err)
-	// }
-
-	//Update user
-	user.Name = "Updated User"
-	if err := us.Update(&user); err != nil {
+	if err := us.Create(&user); err != nil {
 		panic(err)
 	}
 
-	foundUser, err := us.ByEmail("kimi@ri.com")
+	// verify user has a remember and rememberhash
+	fmt.Printf("%+v\n", user)
+	if user.Remember == "" {
+		panic("Invalid remember token")
+	}
+
+	// Now verify that we can lookup a user with that remember token
+	user2, err := us.ByRemember(user.Remember)
 	if err != nil {
 		panic(err)
 	}
+	fmt.Printf("%+v\n", *user2)
+
+	//Update user
+	//user.Name = "Updated User"
+	//if err := us.Update(&user); err != nil {
+	//	panic(err)
+	//}
+
+	//foundUser, err := us.ByEmail("kimi@ri.com")
+	//if err != nil {
+	//	panic(err)
+	//}
 
 	// Delete a user
-	if err := us.Delete(foundUser.ID); err != nil {
-		panic(err)
-	}
+	//if err := us.Delete(foundUser.ID); err != nil {
+	//	panic(err)
+	//}
 
 	// Verify the user is deleted
-	_, err = us.ByID(foundUser.ID)
-	if err != models.ErrNotFound {
-		panic("user was not deleted")
-	}
+	//_, err = us.ByID(foundUser.ID)
+	//if err != models.ErrNotFound {
+	//	panic("user was not deleted")
+	//}
 	// name, email := getInfo()
 
 	// u := &User{

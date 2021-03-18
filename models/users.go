@@ -2,6 +2,8 @@ package models
 
 import (
 	"errors"
+	"galleria.com/hash"
+	"galleria.com/rand"
 	"golang.org/x/crypto/bcrypt"
 
 	"gorm.io/driver/postgres"
@@ -21,16 +23,21 @@ var (
 	userPwPepper = "t8rwjfmru342iv"
 )
 
+const hmacSecretKey = "t53942reft534t"
+
 type User struct {
 	gorm.Model
 	Name         string
 	Email        string `gorm:"not null;unique_index"`
 	Password     string `gorm:"-"`
 	PasswordHash string `gorm:"not null"`
+	Remember     string `gorm:"-"`
+	RememberHash string `gorm:"not null;unique_index"`
 }
 
 type UserService struct {
 	db *gorm.DB
+	hmac hash.HMAC
 }
 
 func NewUserService(connectionInfo string) (*UserService, error) {
@@ -41,8 +48,10 @@ func NewUserService(connectionInfo string) (*UserService, error) {
 		return nil, err
 	}
 
+	hmac := hash.NewHMAC(hmacSecretKey)
 	return &UserService{
 		db: db,
+		hmac: hmac,
 	}, nil
 }
 
@@ -67,7 +76,10 @@ func (us *UserService) ByEmail(email string) (*User, error) {
 // Update will update the provided user with all of the data in the
 // provided user object
 func (us *UserService) Update(user *User) error {
-	return us.db.Create(user).Error
+	if user.Remember != "" {
+		user.RememberHash = us.hmac.Hash(user.Remember)
+	}
+	return us.db.Save(user).Error
 }
 
 func (us *UserService) DestructiveReset() error {
@@ -89,6 +101,15 @@ func (us *UserService) Create(user *User) error {
 	}
 	user.PasswordHash = string(hashedBytes)
 	user.Password = ""
+
+	if user.Remember == "" {
+		token, err := rand.RememberToken()
+		if err != nil {
+			return err
+		}
+		user.Remember = token
+		user.RememberHash = us.hmac.Hash(user.Remember)
+	}
 	return us.db.Create(user).Error
 }
 
@@ -140,4 +161,14 @@ func (us *UserService) Authenticate(email, password string) (*User, error) {
 		return nil, err
 	}
 	return nil, nil
+}
+
+func (us *UserService) ByRemember(token string) (*User, error) {
+	var user User
+	rememberHash := us.hmac.Hash(token)
+	err := first(us.db.Where("remember_hash = ?", rememberHash), &user)
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
 }
