@@ -1,18 +1,21 @@
 package views
 
 import (
+	"bytes"
 	"html/template"
+	"io"
 	"net/http"
 	"path/filepath"
 )
 
 var (
-	LayoutDir string = "views/layouts/"
+	LayoutDir   string = "views/layouts/"
 	TemplateDir string = "views/"
 	TemplateExt string = ".gohtml"
 )
+
 // NewView function to take layout and files
-func NewView(layout string, files ...string) *View  {
+func NewView(layout string, files ...string) *View {
 	addTemplatePath(files)
 	addTemplateExt(files)
 	files = append(files, layoutFiles()...)
@@ -21,16 +24,16 @@ func NewView(layout string, files ...string) *View  {
 		panic(err)
 	}
 
-	return &View {
+	return &View{
 		Template: t,
-		Layout: layout,
+		Layout:   layout,
 	}
 }
 
 // View struct with Template and Layout fields
 type View struct {
 	Template *template.Template
-	Layout string
+	Layout   string
 }
 
 func layoutFiles() []string {
@@ -42,15 +45,29 @@ func layoutFiles() []string {
 }
 
 // Render method for page rendering
-func (v *View) Render(w http.ResponseWriter, data interface{}) error {
+func (v *View) Render(w http.ResponseWriter, data interface{}) {
 	w.Header().Set("Content-Type", "text/html")
-	return v.Template.ExecuteTemplate(w, v.Layout, data)
+	switch data.(type) {
+	case Data:
+	// do nothing
+	default:
+		data = Data{
+			Yield: data,
+		}
+	}
+	var buf bytes.Buffer
+	err := v.Template.ExecuteTemplate(&buf, v.Layout, data)
+	if err != nil {
+		http.Error(w, "Something went wrong. If the problem "+
+			"persists, please email support@galleria.com",
+			http.StatusInternalServerError)
+		return
+	}
+	io.Copy(w, &buf)
 }
 
 func (v *View) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if err := v.Render(w, nil); err != nil {
-		panic(err)
-	}
+	v.Render(w, nil)
 }
 
 // addTemplatePath takes in a slice of strings representing file paths for
@@ -58,7 +75,7 @@ func (v *View) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // the slice
 // E.g the input {"home"} would result in the output
 // {"views/home"} if TemplateDir == "views/"
-func addTemplatePath(files []string)  {
+func addTemplatePath(files []string) {
 	for i, f := range files {
 		files[i] = TemplateDir + f
 	}
@@ -68,7 +85,7 @@ func addTemplatePath(files []string)  {
 // templates and it appends the TemplateExt extension to each string in the
 // slice E.g the input {"home"} would result in the output
 // {"home.gohtml"} if TemplateExt == ".gohtml"
-func addTemplateExt(files []string)  {
+func addTemplateExt(files []string) {
 	for i, f := range files {
 		files[i] = f + TemplateExt
 	}

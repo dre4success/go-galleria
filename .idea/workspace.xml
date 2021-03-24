@@ -2,10 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="60393ab7-d6d0-4e91-ab0d-dc097db7fced" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/views/data.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/views/layouts/alert.gohtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/users.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/users.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/users.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/users.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rand/strings.go" beforeDir="false" afterPath="$PROJECT_DIR$/rand/strings.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/layouts/bootstrap.gohtml" beforeDir="false" afterPath="$PROJECT_DIR$/views/layouts/bootstrap.gohtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/users/new.gohtml" beforeDir="false" afterPath="$PROJECT_DIR$/views/users/new.gohtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/view.go" beforeDir="false" afterPath="$PROJECT_DIR$/views/view.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +55,7 @@
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
