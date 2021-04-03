@@ -2,6 +2,7 @@ package views
 
 import (
 	"bytes"
+	"galleria.com/context"
 	"html/template"
 	"io"
 	"net/http"
@@ -45,21 +46,27 @@ func layoutFiles() []string {
 }
 
 // Render method for page rendering
-func (v *View) Render(w http.ResponseWriter, data interface{}) {
+func (v *View) Render(w http.ResponseWriter, r *http.Request, data interface{}) {
 	w.Header().Set("Content-Type", "text/html")
-	switch data.(type) {
+	var vd Data
+	switch d := data.(type) {
 	case Data:
-	// do nothing
+	// accessing the data in a var with the type Data
+	vd = d
 	default:
-		data = Data{
+		// If the data is Not of the type Data, we create one and set the data
+		// to the Yield field.
+		vd = Data{
 			Yield: data,
 		}
 	}
+	// Lookup and set the user to the User field
+	vd.User = context.User(r.Context())
 	var buf bytes.Buffer
-	err := v.Template.ExecuteTemplate(&buf, v.Layout, data)
+	err := v.Template.ExecuteTemplate(&buf, v.Layout, vd)
 	if err != nil {
 		http.Error(w, "Something went wrong. If the problem "+
-			"persists, please email support@galleria.com",
+			"persists, please email support@dre4success.com",
 			http.StatusInternalServerError)
 		return
 	}
@@ -67,7 +74,7 @@ func (v *View) Render(w http.ResponseWriter, data interface{}) {
 }
 
 func (v *View) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	v.Render(w, nil)
+	v.Render(w, r, nil)
 }
 
 // addTemplatePath takes in a slice of strings representing file paths for

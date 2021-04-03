@@ -1,10 +1,14 @@
 package views
 
-import "log"
+import (
+	"galleria.com/models"
+	"log"
+)
 
 type Data struct {
 	Alert *Alert
 	Yield interface{}
+	User  *models.User
 }
 
 type Alert struct {
@@ -43,9 +47,9 @@ func (d *Data) SetAlert(err error) {
 	}
 }
 
-func (d *Data) AlertError(msg string)  {
+func (d *Data) AlertError(msg string) {
 	d.Alert = &Alert{
-		Level: AlertLvlError,
+		Level:   AlertLvlError,
 		Message: msg,
 	}
 }

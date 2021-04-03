@@ -7,9 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 const (
@@ -67,14 +65,10 @@ type UserDB interface {
 	Create(user *User) error
 	Update(user *User) error
 	Delete(id uint) error
-
-	// Migrate helpers
-	AutoMigrate() error
-	DestructiveReset() error
 }
 
 // userGorm represents our database interaction layer and implements UserDB
-// UserDB interface fully.
+// interface fully.
 type userGorm struct {
 	db *gorm.DB
 }
@@ -224,44 +218,13 @@ func (uv *userValidator) Delete(id uint) error {
 	return uv.UserDB.Delete(id)
 }
 
-func (ug *userGorm) DestructiveReset() error {
-	err := ug.db.Migrator().DropTable(&User{})
-	if err != nil {
-		return err
-	}
-	return ug.AutoMigrate()
-}
-
-// AutoMigrate will attempt to automatically migrate the users table
-func (ug *userGorm) AutoMigrate() error {
-	if err := ug.db.AutoMigrate(&User{}); err != nil {
-		return err
-	}
-	return nil
-}
-
-func newUserGorm(connectionInfo string) (*userGorm, error) {
-	db, err := gorm.Open(postgres.Open(connectionInfo), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &userGorm{
-		db: db,
-	}, nil
-}
-
-func NewUserService(connectionInfo string) (UserServiceI, error) {
-	ug, err := newUserGorm(connectionInfo)
-	if err != nil {
-		return nil, err
-	}
+func NewUserService(db *gorm.DB) UserServiceI {
+	ug := &userGorm{db}
 	hmac := hash.NewHMAC(hmacSecretKey)
 	uv := newUserValidator(ug, hmac)
 	return &userService{
 		UserDB: uv,
-	}, nil
+	}
 }
 
 func first(db *gorm.DB, dst interface{}) error {
