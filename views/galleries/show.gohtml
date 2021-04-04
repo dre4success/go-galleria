@@ -4,8 +4,24 @@
             <h1>
                 {{.Title}}
             </h1>
-            <p>Images coming soon...</p>
+            <hr>
         </div>
     </div>
-{{end}}
+    <div class="row">
+        {{range .ImagesSplitN 3}}
+            <div class="col-md-4">
+                {{range .}}
+                    <a href="{{.Path}}">
+                        <img src="{{.Path}}" alt="" class="thumbnail">
+                    </a>
+                {{end}}
+            </div>
+        {{end}}
+    </div>
 
+    <style>
+        .thumbnail {
+            width: 100%;
+        }
+    </style>
+{{end}}

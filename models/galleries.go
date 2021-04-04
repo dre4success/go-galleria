@@ -6,8 +6,9 @@ import (
 
 type Gallery struct {
 	gorm.Model
-	UserID uint   `gorm:"not_null;index"`
-	Title  string `gorm:"not_null"`
+	UserID uint     `gorm:"not_null;index"`
+	Title  string   `gorm:"not_null"`
+	Images []Image `gorm:"-"`
 }
 
 type GalleryDB interface {
@@ -15,7 +16,7 @@ type GalleryDB interface {
 	ByUserID(userID uint) ([]Gallery, error)
 	Create(gallery *Gallery) error
 	Update(gallery *Gallery) error
-	Delete(id uint)	error
+	Delete(id uint) error
 }
 
 type GalleryServiceI interface {
@@ -104,7 +105,7 @@ func (gv *galleryValidator) nonZeroID(gallery *Gallery) error {
 	return nil
 }
 
-func (gv *galleryValidator) Delete(id uint)	error  {
+func (gv *galleryValidator) Delete(id uint) error {
 	var gallery Gallery
 	gallery.ID = id
 	if err := runGalleryValFns(&gallery, gv.nonZeroID); err != nil {
@@ -139,4 +140,19 @@ func (gg *galleryGorm) ByUserID(userID uint) ([]Gallery, error) {
 		return nil, err
 	}
 	return galleries, nil
+}
+
+func (g *Gallery) ImagesSplitN(n int) [][]Image {
+	// create out 2D slice
+	ret := make([][]Image, n)
+	for i := 0; i < n; i++ {
+		ret[i] = make([]Image, 0)
+	}
+	// Iterate over images using index % n to determine which of the slices
+	// in ret to add the image to
+	for i, img := range g.Images {
+		bucket := i % n
+		ret[bucket] = append(ret[bucket], img)
+	}
+	return ret
 }

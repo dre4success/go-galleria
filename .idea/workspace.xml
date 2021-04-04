@@ -2,23 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="60393ab7-d6d0-4e91-ab0d-dc097db7fced" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/context/context.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/middleware/require_user.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/galleries.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/services.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/views/galleries/edit.gohtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/views/galleries/index.gohtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/views/galleries/new.gohtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/views/galleries/show.gohtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/images.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/galleries.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/galleries.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/users.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/users.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/users.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/users.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/data.go" beforeDir="false" afterPath="$PROJECT_DIR$/views/data.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/layouts/bootstrap.gohtml" beforeDir="false" afterPath="$PROJECT_DIR$/views/layouts/bootstrap.gohtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/layouts/navbar.gohtml" beforeDir="false" afterPath="$PROJECT_DIR$/views/layouts/navbar.gohtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/view.go" beforeDir="false" afterPath="$PROJECT_DIR$/views/view.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/galleries.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/galleries.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/services.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/services.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/galleries/edit.gohtml" beforeDir="false" afterPath="$PROJECT_DIR$/views/galleries/edit.gohtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/galleries/show.gohtml" beforeDir="false" afterPath="$PROJECT_DIR$/views/galleries/show.gohtml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
